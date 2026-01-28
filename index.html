@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asesmen Persiapan Pensiun - Seberapa Kuat Modalmu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            height: 8px;
+            margin: 20px 30px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .category-card {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 15px;
+        }
+
+        .internal-icon {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+
+        .external-icon {
+            background: #c6f6d5;
+            color: #276749;
+        }
+
+        .category-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .question {
+            margin-bottom: 25px;
+        }
+
+        .question-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 12px;
+        }
+
+        .rating-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .rating-option {
+            flex: 1;
+            min-width: 60px;
+        }
+
+        .rating-option input[type="radio"] {
+            display: none;
+        }
+
+        .rating-option label {
+            display: block;
+            padding: 12px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            background: white;
+        }
+
+        .rating-option input[type="radio"]:checked + label {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .rating-option label:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .results {
+            text-align: center;
+        }
+
+        .result-summary {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .result-summary h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .total-score {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .result-card {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid;
+        }
+
+        .result-card.internal {
+            border-color: #4299e1;
+        }
+
+        .result-card.external {
+            border-color: #48bb78;
+        }
+
+        .result-card h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .recommendation {
+            background: #fff5f5;
+            border-left: 5px solid #fc8181;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .recommendation h3 {
+            color: #c53030;
+            margin-bottom: 10px;
+        }
+
+        .recommendation ul {
+            margin-left: 20px;
+            color: #2d3748;
+        }
+
+        .recommendation li {
+            margin: 8px 0;
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .score-low { background: #fed7d7; color: #c53030; }
+        .score-medium { background: #feebc8; color: #c05621; }
+        .score-good { background: #c6f6d5; color: #276749; }
+        .score-excellent { background: #bee3f8; color: #2c5282; }
+
+        @media (max-width: 600px) {
+            .header h1 { font-size: 22px; }
+            .content { padding: 20px; }
+            .rating-group { flex-direction: column; }
+            .button-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Asesmen Persiapan Pensiun</h1>
+            <p>Seberapa Kuat Modalmu untuk Masa Pensiun?</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <div class="content">
+            <!-- Section 1: Internal Strengths -->
+            <div class="section active" id="section1">
+                <div class="category-card">
+                    <div class="category-header">
+                        <div class="icon internal-icon">🧠</div>
+                        <div class="category-title">MODAL INTERNAL (Kekuatan Dalam Diri)</div>
+                    </div>
+
+                    <div class="question">
+                        <label class="question-label">1. PENGETAHUAN - Seberapa siap pengetahuan Anda tentang perencanaan keuangan dan kehidupan pensiun?</label>
+                        <div class="rating-group">
+                            <div class="rating-option">
+                                <input type="radio" name="knowledge" value="1" id="knowledge1">
+                                <label for="knowledge1">1<br><small>Minim</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="knowledge" value="2" id="knowledge2">
+                                <label for="knowledge2">2<br><small>Kurang</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="knowledge" value="3" id="knowledge3">
+                                <label for="knowledge3">3<br><small>Cukup</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="knowledge" value="4" id="knowledge4">
+                                <label for="knowledge4">4<br><small>Baik</small></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <label class="question-label">2. PENGALAMAN - Seberapa banyak pengalaman Anda dalam mengelola keuangan dan merencanakan masa depan?</label>
+                        <div class="rating-group">
+                            <div class="rating-option">
+                                <input type="radio" name="experience" value="1" id="experience1">
+                                <label for="experience1">1<br><small>Minim</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="experience" value="2" id="experience2">
+                                <label for="experience2">2<br><small>Kurang</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="experience" value="3" id="experience3">
+                                <label for="experience3">3<br><small>Cukup</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="experience" value="4" id="experience4">
+                                <label for="experience4">4<br><small>Baik</small></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <label class="question-label">3. KESEHATAN - Bagaimana kondisi kesehatan fisik dan mental Anda saat ini?</label>
+                        <div class="rating-group">
+                            <div class="rating-option">
+                                <input type="radio" name="health" value="1" id="health1">
+                                <label for="health1">1<br><small>Kurang</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="health" value="2" id="health2">
+                                <label for="health2">2<br><small>Cukup</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="health" value="3" id="health3">
+                                <label for="health3">3<br><small>Baik</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="health" value="4" id="health4">
+                                <label for="health4">4<br><small>Sangat Baik</small></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <label class="question-label">4. SIKAP (ATTITUDE) - Seberapa positif dan siap mental Anda menghadapi masa pensiun?</label>
+                        <div class="rating-group">
+                            <div class="rating-option">
+                                <input type="radio" name="attitude" value="1" id="attitude1">
+                                <label for="attitude1">1<br><small>Pesimis</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="attitude" value="2" id="attitude2">
+                                <label for="attitude2">2<br><small>Ragu</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="attitude" value="3" id="attitude3">
+                                <label for="attitude3">3<br><small>Cukup</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="attitude" value="4" id="attitude4">
+                                <label for="attitude4">4<br><small>Optimis</small></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <label class="question-label">5. KREATIVITAS - Seberapa kreatif Anda dalam mencari peluang dan solusi untuk masa pensiun?</label>
+                        <div class="rating-group">
+                            <div class="rating-option">
+                                <input type="radio" name="creativity" value="1" id="creativity1">
+                                <label for="creativity1">1<br><small>Rendah</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="creativity" value="2" id="creativity2">
+                                <label for="creativity2">2<br><small>Kurang</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="creativity" value="3" id="creativity3">
+                                <label for="creativity3">3<br><small>Cukup</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="creativity" value="4" id="creativity4">
+                                <label for="creativity4">4<br><small>Tinggi</small></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-primary" onclick="nextSection(2)">Lanjut ke Modal Eksternal →</button>
+                </div>
+            </div>
+
+            <!-- Section 2: External Assets -->
+            <div class="section" id="section2">
+                <div class="category-card">
+                    <div class="category-header">
+                        <div class="icon external-icon">🤝</div>
+                        <div class="category-title">MODAL EKSTERNAL (Aset & Dukungan Luar)</div>
+                    </div>
+
+                    <div class="question">
+                        <label class="question-label">6. DUKUNGAN KELUARGA - Seberapa kuat dukungan keluarga untuk masa pensiun Anda?</label>
+                        <div class="rating-group">
+                            <div class="rating-option">
+                                <input type="radio" name="family" value="1" id="family1">
+                                <label for="family1">1<br><small>Minim</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="family" value="2" id="family2">
+                                <label for="family2">2<br><small>Kurang</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="family" value="3" id="family3">
+                                <label for="family3">3<br><small>Cukup</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="family" value="4" id="family4">
+                                <label for="family4">4<br><small>Kuat</small></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <label class="question-label">7. JARINGAN (NETWORK) - Seberapa luas jaringan sosial dan profesional Anda?</label>
+                        <div class="rating-group">
+                            <div class="rating-option">
+                                <input type="radio" name="network" value="1" id="network1">
+                                <label for="network1">1<br><small>Terbatas</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="network" value="2" id="network2">
+                                <label for="network2">2<br><small>Kurang</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="network" value="3" id="network3">
+                                <label for="network3">3<br><small>Cukup</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="network" value="4" id="network4">
+                                <label for="network4">4<br><small>Luas</small></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <label class="question-label">8. DANA PENSIUN - Bagaimana kesiapan dana pensiun dan tabungan Anda?</label>
+                        <div class="rating-group">
+                            <div class="rating-option">
+                                <input type="radio" name="pension" value="1" id="pension1">
+                                <label for="pension1">1<br><small>Minim</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="pension" value="2" id="pension2">
+                                <label for="pension2">2<br><small>Kurang</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="pension" value="3" id="pension3">
+                                <label for="pension3">3<br><small>Cukup</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="pension" value="4" id="pension4">
+                                <label for="pension4">4<br><small>Memadai</small></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <label class="question-label">9. ASET FISIK - Bagaimana kondisi aset fisik Anda (rumah, kendaraan, tanah, dll)?</label>
+                        <div class="rating-group">
+                            <div class="rating-option">
+                                <input type="radio" name="assets" value="1" id="assets1">
+                                <label for="assets1">1<br><small>Minim</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="assets" value="2" id="assets2">
+                                <label for="assets2">2<br><small>Terbatas</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="assets" value="3" id="assets3">
+                                <label for="assets3">3<br><small>Cukup</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="assets" value="4" id="assets4">
+                                <label for="assets4">4<br><small>Baik</small></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <label class="question-label">10. KOMUNITAS - Seberapa aktif keterlibatan Anda dalam komunitas sosial?</label>
+                        <div class="rating-group">
+                            <div class="rating-option">
+                                <input type="radio" name="community" value="1" id="community1">
+                                <label for="community1">1<br><small>Pasif</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="community" value="2" id="community2">
+                                <label for="community2">2<br><small>Kurang</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="community" value="3" id="community3">
+                                <label for="community3">3<br><small>Cukup</small></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="community" value="4" id="community4">
+                                <label for="community4">4<br><small>Aktif</small></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-secondary" onclick="prevSection(1)">← Kembali</button>
+                    <button class="btn-primary" onclick="calculateResults()">Lihat Hasil Asesmen</button>
+                </div>
+            </div>
+
+            <!-- Section 3: Results -->
+            <div class="section" id="section3">
+                <div class="results">
+                    <div class="result-summary">
+                        <h2>📊 Hasil Asesmen Anda</h2>
+                        <div class="total-score" id="totalScore">0</div>
+                        <p id="scoreCategory"></p>
+                    </div>
+
+                    <div class="result-grid">
+                        <div class="result-card internal">
+                            <h3>🧠 Modal Internal</h3>
+                            <div class="result-item">
+                                <span>Pengetahuan</span>
+                                <span id="resultKnowledge" class="score-badge">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span>Pengalaman</span>
+                                <span id="resultExperience" class="score-badge">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span>Kesehatan</span>
+                                <span id="resultHealth" class="score-badge">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span>Sikap</span>
+                                <span id="resultAttitude" class="score-badge">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span>Kreativitas</span>
+                                <span id="resultCreativity" class="score-badge">-</span>
+                            </div>
+                            <div class="result-item" style="border-top: 2px solid #4299e1; margin-top: 10px; padding-top: 10px; font-weight: bold;">
+                                <span>Total Internal</span>
+                                <span id="totalInternal" class="score-badge">-</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card external">
+                            <h3>🤝 Modal Eksternal</h3>
+                            <div class="result-item">
+                                <span>Dukungan Keluarga</span>
+                                <span id="resultFamily" class="score-badge">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span>Jaringan</span>
+                                <span id="resultNetwork" class="score-badge">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span>Dana Pensiun</span>
+                                <span id="resultPension" class="score-badge">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span>Aset Fisik</span>
+                                <span id="resultAssets" class="score-badge">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span>Komunitas</span>
+                                <span id="resultCommunity" class="score-badge">-</span>
+                            </div>
+                            <div class="result-item" style="border-top: 2px solid #48bb78; margin-top: 10px; padding-top: 10px; font-weight: bold;">
+                                <span>Total Eksternal</span>
+                                <span id="totalExternal" class="score-badge">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="recommendation" id="recommendation">
+                        <!-- Recommendations will be inserted here -->
+                    </div>
+
+                    <div class="button-group" style="margin-top: 30px;">
+                        <button class="btn-secondary" onclick="resetAssessment()">🔄 Ulangi Asesmen</button>
+                        <button class="btn-primary" onclick="window.print()">🖨️ Cetak Hasil</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function nextSection(sectionNum) {
+            // Check if all questions in current section are answered
+            const currentSection = document.querySelector('.section.active');
+            const radios = currentSection.querySelectorAll('input[type="radio"]');
+            const questions = new Set();
+            
+            radios.forEach(radio => questions.add(radio.name));
+            
+            let allAnswered = true;
+            questions.forEach(question => {
+                if (!document.querySelector(`input[name="${question}"]:checked`)) {
+                    allAnswered = false;
+                }
+            });
+
+            if (!allAnswered) {
+                alert('⚠️ Mohon jawab semua pertanyaan sebelum melanjutkan.');
+                return;
+            }
+
+            showSection(sectionNum);
+        }
+
+        function prevSection(sectionNum) {
+            showSection(sectionNum);
+        }
+
+        function showSection(sectionNum) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(`section${sectionNum}`).classList.add('active');
+            
+            // Update progress bar
+            const progress = (sectionNum - 1) * 50;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function calculateResults() {
+            // Check if all questions are answered
+            const allInputs = document.querySelectorAll('input[type="radio"]');
+            const allQuestions = new Set();
+            allInputs.forEach(input => allQuestions.add(input.name));
+            
+            let allAnswered = true;
+            allQuestions.forEach(question => {
+                if (!document.querySelector(`input[name="${question}"]:checked`)) {
+                    allAnswered = false;
+                }
+            });
+
+            if (!allAnswered) {
+                alert('⚠️ Mohon jawab semua pertanyaan sebelum melihat hasil.');
+                return;
+            }
+
+            // Get all values
+            const values = {
+                knowledge: parseInt(document.querySelector('input[name="knowledge"]:checked').value),
+                experience: parseInt(document.querySelector('input[name="experience"]:checked').value),
+                health: parseInt(document.querySelector('input[name="health"]:checked').value),
+                attitude: parseInt(document.querySelector('input[name="attitude"]:checked').value),
+                creativity: parseInt(document.querySelector('input[name="creativity"]:checked').value),
+                family: parseInt(document.querySelector('input[name="family"]:checked').value),
+                network: parseInt(document.querySelector('input[name="network"]:checked').value),
+                pension: parseInt(document.querySelector('input[name="pension"]:checked').value),
+                assets: parseInt(document.querySelector('input[name="assets"]:checked').value),
+                community: parseInt(document.querySelector('input[name="community"]:checked').value)
+            };
+
+            // Calculate totals
+            const internalTotal = values.knowledge + values.experience + values.health + values.attitude + values.creativity;
+            const externalTotal = values.family + values.network + values.pension + values.assets + values.community;
+            const totalScore = internalTotal + externalTotal;
+
+            // Display individual scores
+            document.getElementById('resultKnowledge').textContent = values.knowledge;
+            document.getElementById('resultExperience').textContent = values.experience;
+            document.getElementById('resultHealth').textContent = values.health;
+            document.getElementById('resultAttitude').textContent = values.attitude;
+            document.getElementById('resultCreativity').textContent = values.creativity;
+            document.getElementById('resultFamily').textContent = values.family;
+            document.getElementById('resultNetwork').textContent = values.network;
+            document.getElementById('resultPension').textContent = values.pension;
+            document.getElementById('resultAssets').textContent = values.assets;
+            document.getElementById('resultCommunity').textContent = values.community;
+
+            // Display totals
+            document.getElementById('totalInternal').textContent = internalTotal + '/20';
+            document.getElementById('totalExternal').textContent = externalTotal + '/20';
+            document.getElementById('totalScore').textContent = totalScore + '/40';
+
+            // Determine category and recommendations
+            let category, categoryClass, recommendations;
+            
+            if (totalScore >= 35) {
+                category = '🌟 EXCELLENT - Sangat Siap!';
+                categoryClass = 'score-excellent';
+                recommendations = `
+                    <h3>✅ Selamat! Kesiapan Anda Sangat Baik</h3>
+                    <ul>
+                        <li><strong>Pertahankan momentum</strong> - Terus jaga kesehatan fisik dan mental Anda</li>
+                        <li><strong>Berbagi pengalaman</strong> - Anda dapat menjadi mentor bagi rekan yang akan pensiun</li>
+                        <li><strong>Eksplorasi peluang baru</strong> - Manfaatkan pengetahuan dan jaringan untuk kegiatan produktif</li>
+                        <li><strong>Diversifikasi aset</strong> - Optimalkan portofolio keuangan untuk jangka panjang</li>
+                    </ul>
+                `;
+            } else if (totalScore >= 28) {
+                category = '👍 BAIK - Cukup Siap';
+                categoryClass = 'score-good';
+                recommendations = `
+                    <h3>⚡ Area yang Perlu Ditingkatkan:</h3>
+                    <ul>
+                        ${internalTotal < 14 ? '<li><strong>Modal Internal:</strong> Tingkatkan pengetahuan tentang perencanaan pensiun dan jaga kesehatan</li>' : ''}
+                        ${externalTotal < 14 ? '<li><strong>Modal Eksternal:</strong> Perkuat jaringan sosial dan pastikan dana pensiun memadai</li>' : ''}
+                        ${values.health < 3 ? '<li><strong>Kesehatan:</strong> Prioritaskan pemeriksaan rutin dan gaya hidup sehat</li>' : ''}
+                        ${values.pension < 3 ? '<li><strong>Dana Pensiun:</strong> Evaluasi dan tingkatkan tabungan pensiun Anda</li>' : ''}
+                        <li><strong>Ikuti pelatihan</strong> persiapan pensiun yang lebih mendalam</li>
+                    </ul>
+                `;
+            } else if (totalScore >= 20) {
+                category = '⚠️ CUKUP - Perlu Persiapan';
+                categoryClass = 'score-medium';
+                recommendations = `
+                    <h3>🎯 Fokus Perbaikan Prioritas:</h3>
+                    <ul>
+                        <li><strong>SEGERA:</strong> Konsultasi dengan perencana keuangan profesional</li>
+                        ${values.pension < 3 ? '<li><strong>PENTING:</strong> Tingkatkan dana pensiun - mulai menabung lebih agresif</li>' : ''}
+                        ${values.health < 3 ? '<li><strong>KESEHATAN:</strong> Konsultasi dokter dan buat rencana kesehatan jangka panjang</li>' : ''}
+                        ${values.knowledge < 3 ? '<li><strong>EDUKASI:</strong> Ikuti workshop dan seminar persiapan pensiun</li>' : ''}
+                        ${values.family < 3 ? '<li><strong>KOMUNIKASI:</strong> Diskusikan rencana pensiun dengan keluarga</li>' : ''}
+                        <li><strong>Buat action plan</strong> konkret untuk 6-12 bulan ke depan</li>
+                    </ul>
+                `;
+            } else {
+                category = '🚨 RENDAH - Butuh Perhatian Serius';
+                categoryClass = 'score-low';
+                recommendations = `
+                    <h3>⚠️ Tindakan Mendesak Diperlukan:</h3>
+                    <ul>
+                        <li><strong>PRIORITAS 1:</strong> Segera konsultasi dengan konselor keuangan dan persiapan pensiun</li>
+                        <li><strong>PRIORITAS 2:</strong> Evaluasi total kondisi keuangan dan buat rencana darurat</li>
+                        <li><strong>PRIORITAS 3:</strong> Cari dukungan dari keluarga, teman, atau komunitas</li>
+                        ${values.pension < 2 ? '<li><strong>DANA PENSIUN:</strong> Ini krusial! Mulai strategi menabung intensif sekarang</li>' : ''}
+                        ${values.health < 2 ? '<li><strong>KESEHATAN:</strong> Check-up medis menyeluruh dan mulai gaya hidup sehat</li>' : ''}
+                        <li><strong>Ikuti program</strong> persiapan pensiun komprehensif dari instansi</li>
+                        <li><strong>Jangan panik</strong> - masih ada waktu untuk memperbaiki, mulai dari sekarang!</li>
+                    </ul>
+                `;
+            }
+
+            document.getElementById('scoreCategory').innerHTML = `<span class="score-badge ${categoryClass}">${category}</span>`;
+            document.getElementById('recommendation').innerHTML = recommendations;
+
+            // Show results section
+            showSection(3);
+            document.getElementById('progressBar').style.width = '100%';
+        }
+
+        function resetAssessment() {
+            if (confirm('Apakah Anda yakin ingin mengulang asesmen? Semua jawaban akan dihapus.')) {
+                document.querySelectorAll('input[type="radio"]').forEach(input => {
+                    input.checked = false;
+                });
+                showSection(1);
+            }
+        }
+
+        // Print styling
+        window.addEventListener('beforeprint', function() {
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById('section3').style.display = 'block';
+        });
+
+        window.addEventListener('afterprint', function() {
+            showSection(3);
+        });
+    </script>
+</body>
+</html>
